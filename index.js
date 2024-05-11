@@ -1,8 +1,8 @@
 const axios = require('axios');
 
 let token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoYXNfZ3Vlc3QiOmZhbHNlLCJ0eXBlIjoiQUNDRVNTIiwiaXNzIjoiYmx1bSIsInN1YiI6IjA0YWVhMjliLTljNzQtNDEwNi1hMDdiLTBjYTFkNTE4ZTBkZiIsImV4cCI6MTcxNTQzODg5NCwiaWF0IjoxNzE1NDM1Mjk0fQ.sjzvCIq3SijeUw1uqkaCP_KkQD_Se9GxvOBrGQ14EZY';
-let refToken = '';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoYXNfZ3Vlc3QiOmZhbHNlLCJ0eXBlIjoiQUNDRVNTIiwiaXNzIjoiYmx1bSIsInN1YiI6IjA0YWVhMjliLTljNzQtNDEwNi1hMDdiLTBjYTFkNTE4ZTBkZiIsImV4cCI6MTcxNTQzODg5NCwiaWF0IjoxNzE1NDM1Mjk0fQ.sjzvCIq3SijeUw1uqkaCP_KkQD_Se9GxvOBrGQ14EZY'; // paste token mu
+let refToken = ''; // biarkan kosong
 async function getClaim() {
   try {
     const response = await axios.post(
@@ -89,7 +89,8 @@ async function getBalance() {
     console.log('Klaim selanjutnya :', timeDifferenceInMinutes, 'menit lagi');
 
     //ubah disini untuk waktu pengambilan refresh token
-    const satuJamDalamMilidetik = 3600 * 1000;
+    const satuJamDalamMilidetik = 5000;
+    // const satuJamDalamMilidetik = 3600 * 1000;
 
     setTimeout(refreshToken, satuJamDalamMilidetik);
     console.log('Refresh token akan dipanggil setelah 1 jam');
