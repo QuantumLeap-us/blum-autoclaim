@@ -89,11 +89,11 @@ async function getBalance() {
     console.log('Klaim selanjutnya :', timeDifferenceInMinutes, 'menit lagi');
 
     //ubah disini untuk waktu pengambilan refresh token
-    const satuJamDalamMilidetik = 5000;
-    // const satuJamDalamMilidetik = 3600 * 1000;
+    // const satuJamDalamMilidetik = 5000;
+    const satuJamDalamMilidetik = 300 * 1000;
 
     setTimeout(refreshToken, satuJamDalamMilidetik);
-    console.log('Refresh token akan dipanggil setelah 1 jam');
+    console.log('Refresh token akan dipanggil setelah 30 menit');
     let countdownTime = satuJamDalamMilidetik;
     const refreshCountdownInterval = setInterval(() => {
       if (countdownTime <= 0) {
@@ -132,7 +132,4 @@ async function refreshToken() {
   }
 }
 
-// refreshToken();
 getClaim();
-// getBalance();
-// startFarm();
