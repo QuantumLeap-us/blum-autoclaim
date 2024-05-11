@@ -101,8 +101,12 @@ async function getBalance() {
         return;
       }
 
-      console.log(`Sisa waktu refresh token: ${countdownTime / 1000} detik`);
-      countdownTime -= 1000;
+      const remainingMinutes = Math.floor(countdownTime / 60000); // 60000 milidetik = 1 menit
+      if (countdownTime % 60000 === 0) {
+        console.log(`Sisa waktu refresh token: ${remainingMinutes} menit`);
+      }
+
+      countdownTime -= 1000; // Kurangi 1 detik
     }, 1000);
   } catch (error) {
     console.log('test token', token);
