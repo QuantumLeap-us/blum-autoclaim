@@ -1,8 +1,8 @@
 const axios = require('axios');
 
-const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoYXNfZ3Vlc3QiOmZhbHNlLCJ0eXBlIjoiQUNDRVNTIiwiaXNzIjoiYmx1bSIsInN1YiI6IjA0YWVhMjliLTljNzQtNDEwNi1hMDdiLTBjYTFkNTE4ZTBkZiIsImV4cCI6MTcxNTQzMzUyMSwiaWF0IjoxNzE1NDI5OTIxfQ.a4kCSUUjKnG89Nqqssh8F8M2BVlVAgrE9HWLsOYVMys';
-
+let token =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoYXNfZ3Vlc3QiOmZhbHNlLCJ0eXBlIjoiQUNDRVNTIiwiaXNzIjoiYmx1bSIsInN1YiI6IjA0YWVhMjliLTljNzQtNDEwNi1hMDdiLTBjYTFkNTE4ZTBkZiIsImV4cCI6MTcxNTQzODg5NCwiaWF0IjoxNzE1NDM1Mjk0fQ.sjzvCIq3SijeUw1uqkaCP_KkQD_Se9GxvOBrGQ14EZY';
+let refToken = '';
 async function getClaim() {
   try {
     const response = await axios.post(
@@ -14,9 +14,9 @@ async function getClaim() {
         },
       }
     );
-    console.log(response.data);
+    console.log('sukses klaim');
+    // console.log(response.data.availableBalance);
     startFarm();
-    console.log(response.data.availableBalance);
   } catch (error) {
     console.log(error.response.data.message);
     console.log('belum waktunya klaim...');
@@ -36,9 +36,9 @@ async function startFarm() {
       }
     );
     console.log(response.data);
-    getBalance();
+    setTimeout(getBalance, 10000);
   } catch (error) {
-    console.log(error.response.data);
+    console.log('error 2: ', error.response.data);
   }
 }
 
@@ -87,11 +87,47 @@ async function getBalance() {
 
     setTimeout(getClaim, timeDifference);
     console.log('Klaim selanjutnya :', timeDifferenceInMinutes, 'menit lagi');
+
+    //ubah disini untuk waktu pengambilan refresh token
+    const satuJamDalamMilidetik = 3600 * 1000;
+
+    setTimeout(refreshToken, satuJamDalamMilidetik);
+    console.log('Refresh token akan dipanggil setelah 1 jam');
+    let countdownTime = satuJamDalamMilidetik;
+    const refreshCountdownInterval = setInterval(() => {
+      if (countdownTime <= 0) {
+        clearInterval(refreshCountdownInterval);
+        console.log('Refresh token telah dipanggil!');
+        return;
+      }
+
+      console.log(`Sisa waktu refresh token: ${countdownTime / 1000} detik`);
+      countdownTime -= 1000;
+    }, 1000);
   } catch (error) {
-    console.log(error);
+    console.log('test token', token);
+    console.log('error 3: ', error.response.data);
   }
 }
 
+async function refreshToken() {
+  try {
+    const response = await axios.post(
+      'https://gateway.blum.codes/v1/auth/refresh',
+      {
+        refresh: token,
+      }
+    );
+    token = response.data.access;
+    refToken = response.data.refresh;
+    console.log(response.data);
+    getBalance();
+  } catch (error) {
+    console.log('error 4: ', error.response.data);
+  }
+}
+
+// refreshToken();
 getClaim();
 // getBalance();
 // startFarm();
