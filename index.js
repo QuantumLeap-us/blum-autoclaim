@@ -1,8 +1,8 @@
 const axios = require('axios');
 
 let token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoYXNfZ3Vlc3QiOmZhbHNlLCJ0eXBlIjoiQUNDRVNTIiwiaXNzIjoiYmx1bSIsInN1YiI6IjA0YWVhMjliLTljNzQtNDEwNi1hMDdiLTBjYTFkNTE4ZTBkZiIsImV4cCI6MTcxNTQzODg5NCwiaWF0IjoxNzE1NDM1Mjk0fQ.sjzvCIq3SijeUw1uqkaCP_KkQD_Se9GxvOBrGQ14EZY'; // paste token mu
-let refToken = ''; // biarkan kosong
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoYXNfZ3Vlc3QiOmZhbHNlLCJ0eXBlIjoiQUNDRVNTIiwiaXNzIjoiYmx1bSIsInN1YiI6IjMwMzI5OTgzLTY3YzQtNGM2Ny04MDQwLTNmMGUxZGJhMjFmOCIsImV4cCI6MTcxNTQ4NzMwNCwiaWF0IjoxNzE1NDgzNzA0fQ.kceugYddsRB3eZ2aGYgYHD7JRpamxMv1BuFJQEUWFJY';
+let refToken = '';
 async function getClaim() {
   try {
     const response = await axios.post(
@@ -14,12 +14,14 @@ async function getClaim() {
         },
       }
     );
+    console.log(token);
     console.log('sukses klaim');
     // console.log(response.data.availableBalance);
     startFarm();
   } catch (error) {
     console.log(error.response.data.message);
     console.log('belum waktunya klaim...');
+    console.log(token);
     startFarm();
   }
 }
@@ -83,17 +85,18 @@ async function getBalance() {
 
       console.log(`Sisa waktu klaim: ${timeDifferenceInMinutes} menit`);
       timeDifferenceInMinutes--;
-    }, 60 * 1000);
+    }, 60 * 60 * 1000);
 
     setTimeout(getClaim, timeDifference);
     console.log('Klaim selanjutnya :', timeDifferenceInMinutes, 'menit lagi');
 
     //ubah disini untuk waktu pengambilan refresh token
+    const satuJamDalamMilidetik = 30 * 60 * 1000;
     // const satuJamDalamMilidetik = 5000;
-    const satuJamDalamMilidetik = 300 * 1000;
 
     setTimeout(refreshToken, satuJamDalamMilidetik);
     console.log('Refresh token akan dipanggil setelah 30 menit');
+    console.log(token);
     let countdownTime = satuJamDalamMilidetik;
     const refreshCountdownInterval = setInterval(() => {
       if (countdownTime <= 0) {
@@ -107,11 +110,11 @@ async function getBalance() {
         console.log(`Sisa waktu refresh token: ${remainingMinutes} menit`);
       }
 
-      countdownTime -= 1000; // Kurangi 1 detik
-    }, 1000);
+      countdownTime -= 1000;
+    }, 30 * 60 * 1000);
   } catch (error) {
     console.log('test token', token);
-    console.log('error 3: ', error.response.data);
+    console.log('error 3: ', error);
   }
 }
 
@@ -126,7 +129,7 @@ async function refreshToken() {
     token = response.data.access;
     refToken = response.data.refresh;
     console.log(response.data);
-    getBalance();
+    getClaim();
   } catch (error) {
     console.log('error 4: ', error.response.data);
   }
